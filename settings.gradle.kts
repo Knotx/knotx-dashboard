@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Knot.x Project
+ * Copyright (C) 2019 Knot.x Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-rootProject.name = 'knotx-dashboard'
+rootProject.name = "knotx-dashboard"
 
-include 'metrics-sender'
+include("knotx-metrics-sender")
+project(":knotx-metrics-sender").projectDir = file("metrics-sender")

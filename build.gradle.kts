@@ -13,7 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ModuleGen(name = "knotx-dashboard", groupPackage = "io.knotx.metrics")
-package io.knotx.metrics;
 
-import io.vertx.codegen.annotations.ModuleGen;
+plugins {
+    id("maven-publish")
+}
+
+subprojects {
+    group = "io.knotx"
+    repositories {
+        jcenter()
+        mavenLocal()
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { url = uri("https://oss.sonatype.org/content/groups/staging/") }
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
+    }
+}
+
+apply(from = "gradle/javaAndUnitTests.gradle.kts")
