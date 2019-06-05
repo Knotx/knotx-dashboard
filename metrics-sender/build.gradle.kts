@@ -19,7 +19,6 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("jacoco")
     id("org.nosphere.apache.rat") version "0.4.0"
 }
 
@@ -50,6 +49,76 @@ tasks {
         excludes.addAll("**/*.json", "**/*.md", "**/*.adoc", "**/build/*", "**/out/*", "**/generated/*")
     }
     getByName("build").dependsOn("rat")
+}
+
+// -----------------------------------------------------------------------------
+// Publication
+// -----------------------------------------------------------------------------
+tasks.register<Jar>("sourcesJar") {
+    from(sourceSets.named("main").get().allJava)
+    classifier = "sources"
+}
+tasks.register<Jar>("javadocJar") {
+    from(tasks.named<Javadoc>("javadoc"))
+    classifier = "javadoc"
+}
+tasks.named<Javadoc>("javadoc") {
+    if (JavaVersion.current().isJava9Compatible) {
+        (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+    }
+}
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "knotx-metrics-sender"
+            from(components["java"])
+            artifact(tasks["sourcesJar"])
+            artifact(tasks["javadocJar"])
+            pom {
+                name.set("Knot.x Graphite Metrics Sender")
+                description.set("Knot.x Graphite Metrics Sender")
+                url.set("http://knotx.io")
+                licenses {
+                    license {
+                        name.set("The Apache Software License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("skejven")
+                        name.set("Maciej Laskowski")
+                        email.set("https://github.com/Skejven")
+                    }
+                    developer {
+                        id.set("tomaszmichalak")
+                        name.set("Tomasz Michalak")
+                        email.set("https://github.com/tomaszmichalak")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/Knotx/knotx-dashboard.git")
+                    developerConnection.set("scm:git:ssh://github.com:Knotx/knotx-dashboard.git")
+                    url.set("http://knotx.io")
+                }
+            }
+        }
+        repositories {
+            maven {
+                val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                val snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+                url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+                credentials {
+                    username = if (project.hasProperty("ossrhUsername")) project.property("ossrhUsername")?.toString() else "UNKNOWN"
+                    password = if (project.hasProperty("ossrhPassword")) project.property("ossrhPassword")?.toString() else "UNKNOWN"
+                    println("Connecting with user: ${username}")
+                }
+            }
+        }
+    }
+}
+signing {
+    sign(publishing.publications["mavenJava"])
 }
 
 apply(from = "../gradle/codegen.deps.gradle.kts")
