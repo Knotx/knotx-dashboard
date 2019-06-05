@@ -4,24 +4,24 @@
 == GraphiteOptions
 
 
-[cols=">25%,25%,50%"]
+[cols=">25%,^25%,50%"]
 [frame="topbot"]
 |===
 ^|Name | Type ^| Description
-|[[address]]`@address`|`String`|-
-|[[port]]`@port`|`Number (int)`|-
+|[[address]]`address`|`String`|-
+|[[port]]`port`|`Number (int)`|-
 |===
 
 [[MetricsSenderOptions]]
 == MetricsSenderOptions
 
 
-[cols=">25%,25%,50%"]
+[cols=">25%,^25%,50%"]
 [frame="topbot"]
 |===
 ^|Name | Type ^| Description
-|[[graphite]]`@graphite`|`link:dataobjects.html#GraphiteOptions[GraphiteOptions]`|-
-|[[pollsPeriod]]`@pollsPeriod`|`Number (int)`|-
-|[[prefix]]`@prefix`|`String`|-
+|[[graphite]]`graphite`|`link:dataobjects.html#GraphiteOptions[GraphiteOptions]`|-
+|[[pollsPeriod]]`pollsPeriod`|`Number (int)`|-
+|[[prefix]]`prefix`|`String`|-
 |===
 
